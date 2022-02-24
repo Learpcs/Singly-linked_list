@@ -57,14 +57,9 @@ public:
 			return this->m_Ptr != rhs.m_Ptr;
 		}
 
-		node<T> operator*()
+		node<T>& operator*()
 		{
 			return *this->m_Ptr;
-		}
-
-		node<T>* operator->()
-		{
-			return this->m_Ptr;
 		}
 
 	private:
@@ -195,10 +190,10 @@ public:
 		this->tail_->next_ = new node<T>(obj);
 		this->tail_ = this->tail_->next_;
 	}
-	void erase_after(const iterator& it)
+	void erase_after(iterator it)
 	{
-		throw;
-		it->next_ = it->next_->next;
+		it->next_ = it->next_->next_;
+		//(*it).next_ = (*it).next_->next;
 	}
 
 	iterator begin()
@@ -216,6 +211,7 @@ int main()
 	list<int> a{ 1, 2, 3 };
 	list<int> b;
 	b = a;
+	a.erase_after(a.begin());
 	for (int& x : a)
 	{
 		std::cout << x << std::endl;
