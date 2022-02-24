@@ -15,8 +15,12 @@ struct node
 	}
 	node()
 	{
-		value_ = std::numeric_limits<T>::max();
-		next_ = nullptr;
+		this->value_ = std::numeric_limits<T>::max();
+		this->next_ = nullptr;
+	}
+	operator T&()
+	{
+		return this->value_;
 	}
 };
 
@@ -212,9 +216,9 @@ int main()
 	list<int> a{ 1, 2, 3 };
 	list<int> b;
 	b = a;
-	for (node<int> x : a)
+	for (int& x : a)
 	{
-		std::cout << x.value_ << std::endl;
+		std::cout << x << std::endl;
 	}
 	b.push_back(100);
 	b.print();
