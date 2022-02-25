@@ -15,12 +15,22 @@ struct node
 	}
 	node()
 	{
-		this->value_ = std::numeric_limits<T>::max();
-		this->next_ = nullptr;
+		this->invalidate();
+	}
+	~node()
+	{
+		this->invalidate();
 	}
 	operator T&()
 	{
 		return this->value_;
+	}
+
+private:
+	void invalidate()
+	{
+		this->value_ = std::numeric_limits<T>::max();
+		this->next_ = nullptr;
 	}
 };
 
@@ -61,7 +71,7 @@ public:
 		{
 			return *this->m_Ptr;
 		}
-
+		  
 	private:
 		node<T>* m_Ptr;
 	};
@@ -86,6 +96,7 @@ private:
 		this->size_ = 0;
 		this->~list();
 	}
+
 
 public:
 	list()
@@ -189,12 +200,57 @@ public:
 	{
 		this->tail_->next_ = new node<T>(obj);
 		this->tail_ = this->tail_->next_;
+		++this->size_;
 	}
 	void erase_after(iterator it)
 	{
 		it->next_ = it->next_->next_;
-		//(*it).next_ = (*it).next_->next;
+		--this->size_;
 	}
+	void erase(const T& value)
+	{
+		node<T>* current = this->head_;
+		while (current == this->head_ && current != nullptr)
+		{
+			if (value == current->value_)
+			{
+				this->pop_front();
+				current = this->head_;
+				--this->size_;
+			}
+			else 
+			{
+				current = current->next_;
+			}
+		}
+		node<T>* prev = this->head_;
+		while (current != nullptr)
+		{
+			if (current->value_ == value)
+			{
+				prev->next_ = current->next_;
+				current = current->next_;
+				--this->size_;
+			}
+			else
+			{
+				prev = current;
+				current = current->next_;
+			}
+		}
+	}
+	void pop_front()
+	{
+		node<T>* current = this->head_;
+		this->head_ = this->head_->next_;
+		delete current;
+		--this->size_;
+	}
+	size_t size()
+	{
+		return this->size_;
+	}
+
 
 	iterator begin()
 	{
@@ -208,16 +264,8 @@ public:
 
 int main()
 {
-	list<int> a{ 1, 2, 3 };
-	list<int> b;
-	b = a;
-	a.erase_after(a.begin());
-	for (int& x : a)
-	{
-		std::cout << x << std::endl;
-	}
-	b.push_back(100);
-	b.print();
+	list<int> a{ 1,1,1,1 };
+	a.print();
+	std::cout << a.size();
 	std::cin.get();
-	std::cout << "lol";
 }
