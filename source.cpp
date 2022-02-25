@@ -109,6 +109,13 @@ public:
 	{
 		this->invalidate();
 	}
+	list(size_t cnt): list()
+	{
+		for (size_t i = 0; i < cnt; i++)
+		{
+			this->push_back(0);
+		}
+	}
 	list(std::initializer_list<T> il) : list()
 	{
 		this->size_ = il.size();
@@ -284,19 +291,5 @@ public:
 
 int main()
 {
-	list<int> a;
-	int x;
-	while (std::cin >> x)
-		a.push_back(x);
-
-	for (auto it = a.begin(); it != a.end(); ++it)
-	{
-		if (*it % 2 == 0)
-		{
-			a.insert_after(it, *it);
-			++it;
-		}
-	}
-	for (int& x : a)
-		std::cout << x << ' ';
+	
 }
