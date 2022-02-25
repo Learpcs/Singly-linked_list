@@ -1,7 +1,8 @@
-#include <limits>
+#include <climits>
 #include <algorithm>
 #include <iostream>
 #include <initializer_list>
+
 template <typename T>
 struct node
 {
@@ -70,6 +71,11 @@ public:
 		node<T>& operator*()
 		{
 			return *this->m_Ptr;
+		}
+
+		node<T>* operator->()
+		{
+			return m_Ptr;
 		}
 		  
 	private:
@@ -198,11 +204,19 @@ public:
 	}
 	void push_back(const T& obj)
 	{
-		this->tail_->next_ = new node<T>(obj);
-		this->tail_ = this->tail_->next_;
+		if (this->size_ == 0)
+		{
+			this->head_ = new node<T>(obj);
+			this->tail_ = this->head_;
+		}
+		else
+		{
+			this->tail_->next_ = new node<T>(obj);
+			this->tail_ = this->tail_->next_;
+		}
 		++this->size_;
 	}
-	void erase_after(iterator it)
+	void erase_after(iterator& it)
 	{
 		it->next_ = it->next_->next_;
 		--this->size_;
@@ -246,17 +260,23 @@ public:
 		delete current;
 		--this->size_;
 	}
-	size_t size()
+	void insert_after(iterator& it, const T& value)
+	{
+		node<T>* tmp = new node<T>(value);
+		tmp->next_ =  it->next_;
+		it->next_ = tmp;
+	}
+	size_t size() const
 	{
 		return this->size_;
 	}
 
 
-	iterator begin()
+	iterator begin() const
 	{
 		return iterator(this->head_);
 	}
-	iterator end()
+	iterator end() const
 	{
 		return iterator(nullptr);
 	}
@@ -264,8 +284,19 @@ public:
 
 int main()
 {
-	list<int> a{ 1,1,1,1 };
-	a.print();
-	std::cout << a.size();
-	std::cin.get();
+	list<int> a;
+	int x;
+	while (std::cin >> x)
+		a.push_back(x);
+
+	for (auto it = a.begin(); it != a.end(); ++it)
+	{
+		if (*it % 2 == 0)
+		{
+			a.insert_after(it, *it);
+			++it;
+		}
+	}
+	for (int& x : a)
+		std::cout << x << ' ';
 }
