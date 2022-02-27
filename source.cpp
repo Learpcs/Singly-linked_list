@@ -75,7 +75,7 @@ public:
 
 		node<T>* operator->()
 		{
-			return m_Ptr;
+			return this->m_Ptr;
 		}
 		  
 	private:
@@ -288,6 +288,8 @@ public:
 		return iterator(nullptr);
 	}
 };
+
+template class list<int>;
 
 int main()
 {
